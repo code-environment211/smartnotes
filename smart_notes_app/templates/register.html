@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5" style="max-width: 500px;">
+    <h2 class="mb-4">User Registration</h2>
+
+    <form id="registerForm">
+      <div class="mb-3">
+        <label>Username</label>
+        <input type="text" class="form-control" name="username" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="email" class="form-control" name="email" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Password</label>
+        <input type="password" class="form-control" name="password" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Role</label>
+        <select class="form-select" name="role">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Register</button>
+      <p class="mt-2" id="registerStatus"></p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+
+      const data = {
+        username: form.username.value,
+        email: form.email.value,
+        password: form.password.value,
+        role: form.role.value
+      };
+
+      const res = await fetch("/api/register/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const status = document.getElementById("registerStatus");
+      if (res.ok) {
+        status.innerText = "Registration successful!";
+        status.classList.add("text-success");
+      } else {
+        const err = await res.json();
+        status.innerText = "Error: " + JSON.stringify(err);
+        status.classList.add("text-danger");
+      }
+    });
+  </script>
+</body>
+</html>
